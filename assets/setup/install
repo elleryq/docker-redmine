@@ -6,7 +6,7 @@ INSTALL_DIR="/home/redmine/redmine"
 DATA_DIR="/home/redmine/data"
 LOG_DIR="/var/log/redmine"
 
-SETUP_DIR="/app/setup"
+SETUP_DIR="/app1/setup"
 GEM_CACHE_DIR="${SETUP_DIR}/cache"
 
 # rebuild apt cache
@@ -147,21 +147,21 @@ ${LOG_DIR}/supervisor/*.log {
 EOF
 
 # configure supervisord to start nginx
-cat > /etc/supervisor/conf.d/nginx.conf <<EOF
-[program:nginx]
-priority=20
-directory=/tmp
-command=/usr/sbin/nginx -g "daemon off;"
-user=root
-autostart=true
-autorestart=true
-stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
-stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
-EOF
+#cat > /etc/supervisor/conf.d/nginx.conf <<EOF
+#[program:nginx]
+#priority=20
+#directory=/tmp
+#command=/usr/sbin/nginx -g "daemon off;"
+#user=root
+#autostart=true
+#autorestart=true
+#stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+#stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+#EOF
 
 # configure supervisord to start unicorn
-cat > /etc/supervisor/conf.d/unicorn.conf <<EOF
-[program:unicorn]
+cat > /etc/supervisor/conf.d/unicorn_redmine.conf <<EOF
+[program:unicorn_redmine]
 priority=10
 directory=${INSTALL_DIR}
 environment=HOME=/home/redmine
@@ -175,17 +175,17 @@ stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
 EOF
 
 # configure supervisord to start crond
-cat > /etc/supervisor/conf.d/cron.conf <<EOF
-[program:cron]
-priority=20
-directory=/tmp
-command=/usr/sbin/cron -f
-user=root
-autostart=true
-autorestart=true
-stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
-stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
-EOF
+#cat > /etc/supervisor/conf.d/cron.conf <<EOF
+#[program:cron]
+#priority=20
+#directory=/tmp
+#command=/usr/sbin/cron -f
+#user=root
+#autostart=true
+#autorestart=true
+#stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+#stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+#EOF
 
 # purge build dependencies
 apt-get purge -y --auto-remove \
@@ -193,4 +193,4 @@ apt-get purge -y --auto-remove \
   libmysqlclient-dev libpq-dev libxslt1-dev libffi-dev libyaml-dev
 
 # cleanup
-rm -rf /var/lib/apt/lists/* # 20140918
+#rm -rf /var/lib/apt/lists/* # 20140918

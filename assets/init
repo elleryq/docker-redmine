@@ -1,13 +1,17 @@
 #!/bin/bash
 set -e
 
+. /app1/env
+
+service supervisor stop
+
 INSTALL_DIR="/home/redmine/redmine"
 CONFIG_DIR="${INSTALL_DIR}/config"
 DATA_DIR="/home/redmine/data"
 LOG_DIR="/var/log/redmine"
 SSL_CERTIFICATES_DIR="${DATA_DIR}/certs"
 
-SETUP_DIR="/app/setup"
+SETUP_DIR="/app1/setup"
 SYSCONF_TEMPLATES_DIR="${SETUP_DIR}/config"
 USERCONF_TEMPLATES_DIR="${DATA_DIR}/config"
 
@@ -507,7 +511,8 @@ appStart () {
   rm -rf tmp/sockets/redmine.socket
 
   # start supervisord
-  exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+  #exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+  service supervisor start
 }
 
 appRake () {
